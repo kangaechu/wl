@@ -48,22 +48,17 @@ template "/tmp/responseFile.xml" do
   mode "0644"
 end
 
-template "/tmp/createdb-mysql.sql" do
+execute "wl-createdb-mysql" do
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" < #{node['mysql']['conf_dir']}/wl-createdb-mysql.sql"
+  action :nothing
+end
+
+template "#{node['mysql']['conf_dir']}/wl-createdb-mysql.sql" do
   source "createdb-mysql.sql.erb"
   owner "root"
   group "root"
   mode "0644"
-end
-
-bash "Create Worklight Databases" do
-  user "root"
-  cwd "/tmp"
-  flags "-x"
-  code <<-EOH
-    mysql -u root < /tmp/createdb-mysql.sql
-    rm -f /tmp/createdb-mysql.sql
-  EOH
-  not_if {File.exists?("/opt/IBM/Worklight")}
+  notifies :run, "execute[wl-createdb-mysql]", :immediately
 end
 
 bash "Install Worklight Server" do
