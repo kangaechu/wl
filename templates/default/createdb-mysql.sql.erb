@@ -1,0 +1,12 @@
+CREATE USER '<%= node["wl"]["mysql"]["username"] %>'@'<%= node["wl"]["mysql"]["host"] %>' IDENTIFIED BY '<%= node["wl"]["mysql"]["password2"] %>';
+CREATE DATABASE IF NOT EXISTS WRKLGHT CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT ALL privileges ON WRKLGHT.* TO '<%= node["wl"]["mysql"]["username"] %>'@'<%= node["wl"]["mysql"]["host"] %>' IDENTIFIED BY '<%= node["wl"]["mysql"]["password2"] %>';
+Flush privileges;
+CREATE DATABASE IF NOT EXISTS WLREPORT CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT ALL privileges ON WLREPORT.* TO '<%= node["wl"]["mysql"]["username"] %>'@'<%= node["wl"]["mysql"]["host"] %>' IDENTIFIED BY '<%= node["wl"]["mysql"]["password2"] %>';
+Flush privileges;
+CREATE DATABASE IF NOT EXISTS APPCNTR CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT ALL privileges ON APPCNTR.* TO '<%= node["wl"]["mysql"]["username"] %>'@'<%= node["wl"]["mysql"]["host"] %>' IDENTIFIED BY '<%= node["wl"]["mysql"]["password2"] %>';
+CREATE DATABASE IF NOT EXISTS APPCNTR CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT ALL privileges ON APPCNTR.* TO '<%= node["wl"]["mysql"]["appcenter"]["username"] %>'@'<%= node["wl"]["mysql"]["host"] %>' IDENTIFIED BY '<%= node["wl"]["mysql"]["appcenter"]["password"] %>';
+Flush privileges;
