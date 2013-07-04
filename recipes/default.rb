@@ -19,6 +19,7 @@
 
 filenameInstMgr = "agent.installer.linux.gtk.x86_64_1.6.3001.20130528_1750.zip"
 filenameWLServer = "CIN04EN_001.zip"
+InstallPackageDir = "/tmp/tools"
 InstallationManagerExtractDir = "InstallationManager"
 
 package "unzip" do
@@ -33,7 +34,7 @@ bash "Install Installation Manager" do
     INSTDATE=`date "+%Y%m%d-%H%M"`
     rm -rf /tmp/#{InstallationManagerExtractDir}
     mkdir #{InstallationManagerExtractDir}
-    unzip -q #{Chef::Config[:file_cache_path]}/#{filenameInstMgr} -d #{InstallationManagerExtractDir}
+    unzip -q #{InstallPackageDir}/#{filenameInstMgr} -d #{InstallationManagerExtractDir}
     cd #{InstallationManagerExtractDir}
     ./install --launcher.ini silent-install.ini -log /tmp/InstallationManager-${INSTDATE}.log -acceptLicense
     rm -rf /tmp/#{filenameInstMgr.sub(".zip", "")}
@@ -67,9 +68,9 @@ bash "Install Worklight Server" do
   flags "-x -e"
   code <<-EOH
     INSTDATE=`date "+%Y%m%d-%H%M"`
-    cp -f #{Chef::Config[:file_cache_path]}/#{node[:wl][:mysql][:driver]} /tmp
+    cp -f #{InstallPackageDir}/#{node[:wl][:mysql][:driver]} /tmp
     rm -rf /tmp/Worklight
-    unzip -q #{Chef::Config[:file_cache_path]}/#{filenameWLServer}
+    unzip -q #{InstallPackageDir}/#{filenameWLServer}
     cd /opt/IBM/InstallationManager/eclipse
     ./IBMIM --launcher.ini silent-install.ini -input /tmp/responseFile.xml -log /tmp/WLServer-${INSTDATE}.xml -acceptLicense
     rm -rf /tmp/Worklight
