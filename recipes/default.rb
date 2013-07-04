@@ -92,3 +92,7 @@ directory "#{node[:wl][:tomcat][:installdir]}/webapps/worklight" do
   mode "0755"
   action :create
 end
+
+file "#{node[:wl][:tomcat][:installdir]}/lib/worklight-jee-library.jar" do
+  content IO.read("/opt/IBM/Worklight/WorklightServer/worklight-jee-library.jar")
+end
