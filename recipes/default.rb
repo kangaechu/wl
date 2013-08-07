@@ -59,7 +59,16 @@ template "#{node['mysql']['conf_dir']}/wl-createdb-mysql.sql" do
   owner "root"
   group "root"
   mode "0644"
+  not_if {File.exists?("/opt/IBM/Worklight")}
   notifies :run, "execute[wl-createdb-mysql]", :immediately
+end
+
+bash "wl-createtables-mysql" do
+  code <<-EOH
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" WRKLGHT < /opt/IBM/Worklight/WorklightServer/databases/create-worklight-mysql.sql
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" WLREPORT < /opt/IBM/Worklight/WorklightServer/databases/create-worklightreports-mysql.sql
+  EOH
+  action :nothing
 end
 
 bash "Install Worklight Server" do
