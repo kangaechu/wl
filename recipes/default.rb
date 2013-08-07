@@ -73,10 +73,12 @@ bash "Install Worklight Server" do
     unzip -q #{InstallPackageDir}/#{filenameWLServer}
     cd /opt/IBM/InstallationManager/eclipse
     ./IBMIM --launcher.ini silent-install.ini -input /tmp/responseFile.xml -log /tmp/WLServer-${INSTDATE}.xml -acceptLicense
+    cp /opt/IBM/Worklight/WorklightServer/worklight-jee-library.jar #{node[:wl][:tomcat][:installdir]}/lib/
     rm -rf /tmp/Worklight
     rm /tmp/#{node[:wl][:mysql][:driver]}
   EOH
   not_if {File.exists?("/opt/IBM/Worklight")}
+  notifies :run, "bash[wl-createtables-mysql]", :immediately
 end
 
 template "#{node[:wl][:tomcat][:installdir]}/conf/Catalina/localhost/worklight.xml" do
@@ -91,8 +93,4 @@ directory "#{node[:wl][:tomcat][:installdir]}/webapps/worklight" do
   group "tomcat"
   mode "0755"
   action :create
-end
-
-file "#{node[:wl][:tomcat][:installdir]}/lib/worklight-jee-library.jar" do
-  content IO.read("/opt/IBM/Worklight/WorklightServer/worklight-jee-library.jar")
 end
